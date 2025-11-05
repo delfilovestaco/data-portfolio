@@ -56,3 +56,44 @@ from customers group by country order by customer_count asc;
 ```
 
 **Result:** Generated `customer_analysis.sql` with all SQL queries practiced today.
+
+## Day 3 - SQL SELECT & WHERE Practice
+
+**📅 Date:** 11/05/2025
+**🎯 Focus:** Practice basic SELECT queries and filtering conditions in MySQL.
+
+**What I learned:**
+
+- Imported employees sample dataset into MySQL
+- Practiced SELECT queries: choosing specific columns, using aliases
+- Learned filtering with WHERE, AND/OR/NOT, BETWEEN, IN, LIKE
+- Explored basic conditions on employee data: hire date, salary, and department
+
+**Example Queries**
+
+```sql
+SHOW DATABASES;
+USE employees;
+SHOW TABLES;
+select * from employees;
+
+select
+	emp_no as "직원 번호",
+    first_name as "이름",
+    last_name as "성",
+    hire_date as "입사일"
+from employees limit 10;
+
+select emp_no, first_name, last_name, hire_date
+from employees
+where hire_date >= '1990-01-01' and last_name = 'Smith';
+select * from employees where last_name like 'sm%' order by last_name asc;
+
+select emp_no, first_name, last_name, hire_date
+from employees
+where hire_date between '1986-01-01' and '1990-12-31'
+order by hire_date asc;
+
+```
+
+**Result:** Generated `practice_sql.sql` with all SQL queries practiced today.
