@@ -23,6 +23,8 @@ SELECT COUNT(*) FROM Customers;
 SELECT DISTINCT City FROM Customers;
 ```
 
+**Result:** Generated `day1_basic_select.sql` with all SQL queries practiced today.
+
 ## Day 2 - Data creation and aggregation
 
 **📅 Date:** 04/11/2025
@@ -55,11 +57,11 @@ select country, count(*) as customer_count
 from customers group by country order by customer_count asc;
 ```
 
-**Result:** Generated `customer_analysis.sql` with all SQL queries practiced today.
+**Result:** Generated `day2_customer_analysis.sql` with all SQL queries practiced today.
 
 ## Day 3 - SQL SELECT & WHERE Practice
 
-**📅 Date:** 11/05/2025
+**📅 Date:** 05/11/2025
 **🎯 Focus:** Practice basic SELECT queries and filtering conditions in MySQL.
 
 **What I learned:**
@@ -93,7 +95,44 @@ select emp_no, first_name, last_name, hire_date
 from employees
 where hire_date between '1986-01-01' and '1990-12-31'
 order by hire_date asc;
-
 ```
 
-**Result:** Generated `practice_sql.sql` with all SQL queries practiced today.
+**Result:** Generated `day3_practice_sql.sql` with all SQL queries practiced today.
+
+## Day 4 - SQL JOIN Practice
+
+**📅 Date:** 06/11/2025
+**🎯 Focus:** Understanding and practicing different types of JOIN operations in MySQL.
+
+**What I learned:**
+
+- Practiced combining multiple tables using INNER JOIN, LEFT JOIN, and RIGHT JOIN
+- Understood how joins merge rows based on matching values in key columns
+- Learned the difference between inner and outer joins in terms of which rows are retained in the result
+- Explored how NULL values behave in join conditions
+- Clarified the logical structure of join execution (how joins build upon previous results step-by-step)
+
+**Example Queries**
+
+```sql
+SELECT e.first_name, e.last_name, dp.dept_name
+from employees e
+join dept_emp d on e.emp_no = d.emp_no
+join departments dp on d.dept_no = dp.dept_no;
+
+ SELECT dp.dept_name, count(*) as total_employees
+  from employees e
+  join dept_emp d on e.emp_no = d.emp_no
+  join departments dp on d.dept_no = dp.dept_no
+  group by dp.dept_name
+  order by dp.dept_name asc;
+
+    select e.first_name, e.last_name, dp.dept_name
+  from employees e
+  join dept_emp d on e.emp_no = d.emp_no
+  join departments dp on d.dept_no = dp.dept_no
+  where dp.dept_name = 'Sales'
+  order by e.first_name asc;
+```
+
+**Result:** Generated `day4_join.sql` containing all join-related practice queries and explanations.
