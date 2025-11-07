@@ -136,3 +136,103 @@ join departments dp on d.dept_no = dp.dept_no;
 ```
 
 **Result:** Generated `day4_join.sql` containing all join-related practice queries and explanations.
+
+## Day 5 - SQL JOIN (INNER / LEFT)
+
+**📅 Date:** 07/11/2025
+**🎯 Focus:** Understanding and practicing SQL JOINs (INNER JOIN, LEFT JOIN)
+
+**What I learned:**
+
+- How to combine multiple tables using JOIN
+- The difference between INNER JOIN and LEFT JOIN
+- How to handle NULL values that result from joins
+- How to identify duplicated keys after joins (using GROUP BY and HAVING)
+- How to inspect data completeness and missing values after joining
+- Practiced analyzing join results to understand which rows remain or disappear
+
+**Key Concepts:**
+| JOIN Type | Description | Output Characteristics |
+| ------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `INNER JOIN` | Returns rows with matching keys in both tables | Only common (intersection) rows remain |
+| `LEFT JOIN` | Returns all rows from the left table and matching rows from the right | Keeps all left-side data, fills missing right-side data with `NULL` |
+
+**Example Queries**
+
+```sql
+-- 1. INNER join basic
+SELECT e.emp_no, e.first_name, e. last_name, d.dept_name
+FROM employees e
+join dept_emp de on e.emp_no = de.emp_no
+join departments d on de.dept_no = d.dept_no
+order by emp_no asc;
+
+select count(*) as num_emplyees from employees; -- 300024
+select count(*) as num_dept from dept_emp; -- 331603
+select count(*) as num_employees_dept
+from employees e
+join dept_emp de on e.emp_no = de.emp_no; -- 331603
+SELECT count(*) total_num
+FROM employees e
+join dept_emp de on e.emp_no = de.emp_no
+join departments d on de.dept_no = d.dept_no; -- 331603
+
+SELECT count(emp_no) from employees; -- 300024
+SELECT count(distinct emp_no) from employees; -- 300024
+select count(emp_no) from dept_emp; -- 331603
+select count(distinct emp_no) from dept_emp; -- 300024
+-- ㄴ> 한 명의 사원이 여러 부서에 들어가 있는 것을 알 수 있음
+
+-- 사람을 기준으로 부서가 몇 개 할당되어 있는지 보고 싶음
+SELECT e.first_name, count(*) as dept_by_emp
+from employees e
+join dept_emp de on e.emp_no = de.emp_no
+group by e.emp_no;
+
+-- 사람을 기준으로 부서가 2개 이상 할당되어 있는 사람만 보고 싶음
+-- ㄴ> where 쓰면 안 되지!!!!! 그룹화되어 있는 것을 필터링할 때는 having 이지!!
+SELECT e.emp_no, e.first_name, count(*) as dept_by_emp
+from employees e
+join dept_emp de on e.emp_no = de.emp_no
+group by e.emp_no, e.first_name
+having dept_by_emp >=2;
+-- ㄴ> group by 에 e.emp_no 말고도, e.first_name, e.last_name도 적어야 함
+-- ㄴ> 표준 SQL 문법 관점 : SELECT 절에 있는 컬럼은 GROUP BY에 포함되어 있거나, 집계 함수로 감싸져 있어야 한다.
+
+-- 저 위의 테이블에서 그럼 2개 부서가 할당된 사람이 몇 명인지는 못 보나?
+-- : 서브쿼리
+SELECT count(*) as num_of_multi_dept_emps
+From(
+	SELECT e.emp_no, e.first_name, count(*) as dept_by_emp
+	from employees e
+	join dept_emp de on e.emp_no = de.emp_no
+	group by e.emp_no, e.first_name
+	having dept_by_emp >=2
+) as sub; -- 31579 => employees 테이블의 총 수 300.024 +  2개 이상인 사람 -> 331.603나옴
+
+-- 서브쿼리2 : MySQL 8.0 이상에서 가능함.
+with multi_dept as(
+	SELECT e.emp_no, e.first_name, count(*) as dept_by_emp
+	from employees e
+	join dept_emp de on e.emp_no = de.emp_no
+	group by e.emp_no, e.first_name
+	having dept_by_emp >=2
+)
+select count(*) as num_of_multi_dept_emps
+from multi_dept;
+
+-- left join
+SELECT e.emp_no, e.first_name, e.last_name, d.dept_name
+FROM employees e
+LEFT JOIN dept_emp de ON e.emp_no = de.emp_no
+LEFT JOIN departments d ON de.dept_no = d.dept_no
+LIMIT 10;
+-- ㄴ> 일부 직원의 dempt_name 이 null일 수도 있다.
+SELECT e.emp_no, e.first_name, e.last_name, d.dept_name
+FROM employees e
+LEFT JOIN dept_emp de ON e.emp_no = de.emp_no
+LEFT JOIN departments d ON de.dept_no = d.dept_no
+where d.dept_name is null;
+```
+
+**Result:** Generated `day5_join_practice.sql` with INNER and LEFT JOIN examples and query results.
