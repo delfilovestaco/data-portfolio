@@ -236,3 +236,71 @@ where d.dept_name is null;
 ```
 
 **Result:** Generated `day5_join_practice.sql` with INNER and LEFT JOIN examples and query results.
+
+## Day 6 - SQL JOIN Mastery
+
+**📅 Date:** 10/11/2025
+**🎯 Focus:** Mastering all types of JOINs (INNER, LEFT, RIGHT, FULL OUTER, SELF JOIN) and practicing real-world scenarios in MySQL.
+
+**What I learned:**
+
+- Reviewed LEFT JOIN vs INNER JOIN differences
+  ㄴ> INNER JOIN: only matching rows are retained
+  ㄴ> LEFT JOIN: all left table rows are retained, unmatched right table rows become NULL
+- Practiced RIGHT JOIN to understand the mirror of LEFT JOIN
+  ㄴ> Right table rows are fully retained, unmatched left table rows become NULL
+- Understood FULL OUTER JOIN concept and how to simulate it in MySQL using UNION
+- Learned SELF JOIN to query hierarchical or relational data within the same table
+  ㄴ> Example: finding employee-manager relationships or colleagues sharing the same attribute
+- Clarified how NULL values propagate in different JOIN types
+- Learned the importance of aliasing and column selection to avoid duplicate column names in JOIN results
+- Generated multiple result sets and uploaded them to GitHub for practice and documentation
+
+**Example Queries**
+
+```sql
+-- 1) inner join
+select * from employees2 e2
+join emp_dept2 ed2 on e2.emp_no = ed2.emp_no
+-- ㄴ> 결과 : emp_no 이 1, 2인 것 하나씩 + 4인 것 2개, 총 4개
+-- & dabin 1111, jimin 2222, jiyeon 1111, 2222
+join departments2 d2 on ed2.dept_no = d2.dept_no;
+-- ㄴ> 결과 : dabin 1111, jimin 2222, jyeon 1111, 2222.
+
+-- 2) left join
+select * from employees2 e2
+left join emp_dept2 ed2 on e2.emp_no = ed2.emp_no
+-- ㄴ> 결과 : 12344null(emp테이블의) - dasom, matteo dept_num null
+left join departments2 d2 on ed2.dept_no = d2.dept_no;
+-- ㄴ> 결과 : dabin1111, jimin2222, dasomnull, jiyyeon11112222,matteonull,
+-- & dasom, matteo  dep_name null
+
+-- 3) right join
+select * from employees2 e2
+right join emp_dept2 ed2 on e2.emp_no = ed2.emp_no;
+-- ㄴ> emp_no이 1, 2 각각 하나, 4 둘, 5, null(empt_dept에서 온 것) 각각 하나
+SELECT
+    COALESCE(ed2.emp_no, e2.emp_no) AS emp_no,  -- 기준 컬럼 하나로 합치기
+    ed2.dept_no,
+    e2.first_name,
+    e2.last_name
+FROM employees2 e2
+RIGHT JOIN emp_dept2 ed2 ON e2.emp_no = ed2.emp_no;
+
+-- 4) self join
+select e1.first_name as firstname1, e2.first_name as firstname2
+from employees2 e1 join employees2 e2
+where e1.last_name = e2.last_name
+and e1.emp_no <> e2.emp_no;
+
+select
+coalesce(e1.first_name, e2.first_name) as emp_name, e1.last_name
+from employees2 e1
+join employees2 e2
+where e1.last_name = e2.last_name
+and e1.emp_no <> e2.emp_no;
+
+
+```
+
+**Result:** Generated `day6_join_rightfullself.sql`, with README documenting all JOIN types, differences, and practical insights.
